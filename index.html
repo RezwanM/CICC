@@ -6,18 +6,16 @@
     <title>Mixed Media Slideshow</title>
     <style>
         /* Reset and layout setup */
-        * {
+        *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #111;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
         }
 
         /* Slideshow Container */
@@ -27,7 +25,6 @@
             height: 100vh;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
             background: #000;
             overflow: hidden;
             box-shadow: 0 8px 24px rgba(0,0,0,0.5);
@@ -62,6 +59,18 @@
             from { opacity: 0.4; }
             to { opacity: 1; }
         }
+
+        .scaled {
+            /* Default scale if JS is disabled */
+            --scale-factor: 1; 
+            
+            /* Calculates the proportional width/height inverse to the scale */
+            width: calc(100% / var(--scale-factor));
+            height: calc(100% / var(--scale-factor));
+            
+            transform: scale(var(--scale-factor));
+            transform-origin: top left;
+          }
         
         /* Special Config for Fasting Calendar */
         .sunnahfastcalendar {
@@ -109,10 +118,12 @@
         </div>
 
         <!-- Slide 2: Web Page (CICC Masjid Prayer Times) -->
-        <div class="slide fade">
+        <div class="slide fade scaled">
             <iframe
                 src="https://mosqueprayertimes.com/ciccmasjid"
-                sandbox="allow-same-origin allow-scripts">
+                title="CICC masjid prayer times"
+                sandbox="allow-same-origin allow-scripts"
+                allowfullscreen>
             </iframe>
         </div>
 
@@ -125,7 +136,9 @@
         <div class="slide fade">
             <iframe
                 src="https://mosqueprayertimes.com/ciccmasjid"
-                sandbox="allow-same-origin allow-scripts">
+                title="CICC masjid prayer times"
+                sandbox="allow-same-origin allow-scripts"
+                allowfullscreen>
             </iframe>
         </div>
 
@@ -138,7 +151,9 @@
         <div class="slide fade">
             <iframe
                 src="https://mosqueprayertimes.com/ciccmasjid"
-                sandbox="allow-same-origin allow-scripts">
+                title="CICC masjid prayer times"
+                sandbox="allow-same-origin allow-scripts"
+                allowfullscreen>
             </iframe>
         </div>
 
@@ -151,7 +166,9 @@
         <div class="slide fade">
             <iframe
                 src="https://mosqueprayertimes.com/ciccmasjid"
-                sandbox="allow-same-origin allow-scripts">
+                title="CICC masjid prayer times"
+                sandbox="allow-same-origin allow-scripts"
+                allowfullscreen>
             </iframe>
         </div>
 
@@ -165,7 +182,12 @@
 
         <!-- Slide 10: Web Page (CICC Masjid Prayer Times) -->
         <div class="slide fade">
-            <iframe src="https://mosqueprayertimes.com/ciccmasjid"></iframe>
+            <iframe
+                src="https://mosqueprayertimes.com/ciccmasjid"
+                title="CICC masjid prayer times"
+                sandbox="allow-same-origin allow-scripts"
+                allowfullscreen>
+            </iframe>
         </div>
 
         <!-- Navigation Arrows -->
@@ -178,6 +200,8 @@
         let slideIndex = 0;
         let slideInterval;
         const displayDuration = 10000; // Time per slide in milliseconds (10 seconds)
+        const iframe = document.querySelector('.scaled');
+        const wrapper = document.querySelector('.slideshow-container');
 
         // Initialize slideshow
         showSlides(slideIndex);
@@ -216,6 +240,22 @@
                 showSlides(slideIndex);
             }, displayDuration);
         }
+
+        function adjustScale() {
+            // Let's say the iframe content was originally designed for a 1200px width
+            const baseWidth = 1200; 
+            const currentWidth = wrapper.offsetWidth;
+            
+            // Calculate the scale ratio
+            const scale = currentWidth / baseWidth;
+            
+            // Pass the value directly to CSS
+            iframe.style.setProperty('--scale-factor', scale);
+          }
+
+        // Run on load and whenever the browser zooms or resizes
+        window.addEventListener('resize', adjustScale);
+        window.addEventListener('DOMContentLoaded', adjustScale);
     </script>
 
 </body>
