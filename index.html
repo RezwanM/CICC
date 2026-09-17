@@ -1,263 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mixed Media Slideshow</title>
-    <style>
-        /* Reset and layout setup */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        /* Slideshow Container */
-        .slideshow-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-            background: #000;
-            overflow: hidden;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-        }
-
-        /* Slide element defaults */
-        .slide {
-            display: none;
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Make images scale smoothly inside the slide */
-        .slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Keeps image proportions without cropping */
-        }
-
-        /* Make web pages fill the slide container completely */
-        .slide iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* Fade Animation Effect */
-        .fade {
-            animation: fadeEffect 1s;
-        }
-        @keyframes fadeEffect {
-            from { opacity: 0.4; }
-            to { opacity: 1; }
-        }
-
-        .scaled {
-            /* Default scale if JS is disabled */
-            --scale-factor: 1; 
-            
-            /* Calculates the proportional width/height inverse to the scale */
-            width: calc(100% / var(--scale-factor));
-            height: calc(100% / var(--scale-factor));
-            
-            transform: scale(var(--scale-factor));
-            transform-origin: top left;
-          }
-        
-        /* Special Config for Fasting Calendar */
-        .sunnahfastcalendar {
-            position: absolute;
-            top: -380px;    /* Adjust this to "scroll" vertically */
-            left: -860px;   /* Adjust this to "scroll" horizontally */
-            width: 3000px;  /* Set large enough to hold the site's layout */
-            height: 3000px; 
-            border: none;
-        }
-
-        /* Manual Navigation Buttons */
-        .prev, .next {
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            padding: 16px;
-            color: white;
-            font-weight: bold;
-            font-size: 24px;
-            border-radius: 0 4px 4px 0;
-            user-select: none;
-            background-color: rgba(0, 0, 0, 0.4);
-            border: none;
-            transition: 0.3s ease;
-            z-index: 10;
-        }
-        .next {
-            right: 0;
-            border-radius: 4px 0 0 4px;
-        }
-        .prev:hover, .next:hover {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-    </style>
-</head>
-<body>
-
-    <div class="slideshow-container">
-
-        <!-- Slide 1: Image -->
-        <div class="slide fade">
-            <img src="images/Weekly_Classes_16_9.jpg" alt="Weekly Classes">
-        </div>
-
-        <!-- Slide 2: Web Page (CICC Masjid Prayer Times) -->
-        <div class="slide fade scaled">
-            <iframe
-                src="https://mosqueprayertimes.com/ciccmasjid"
-                title="CICC masjid prayer times"
-                sandbox="allow-same-origin allow-scripts"
-                allowfullscreen>
-            </iframe>
-        </div>
-
-        <!-- Slide 3: Another Image -->
-        <div class="slide fade">
-            <img src="images/Jummah_Parking_16_9.png" alt="Jummah Parking">
-        </div>
-
-        <!-- Slide 4: Web Page (CICC Masjid Prayer Times) -->
-        <div class="slide fade scaled">
-            <iframe
-                src="https://mosqueprayertimes.com/ciccmasjid"
-                title="CICC masjid prayer times"
-                sandbox="allow-same-origin allow-scripts"
-                allowfullscreen>
-            </iframe>
-        </div>
-
-        <!-- Slide 5: Another Image -->
-        <div class="slide fade">
-            <img src="images/Social_Media_Info_16_9.png" alt="Social Media Info">
-        </div>
-
-        <!-- Slide 6: Web Page (CICC Masjid Prayer Times) -->
-        <div class="slide fade scaled">
-            <iframe
-                src="https://mosqueprayertimes.com/ciccmasjid"
-                title="CICC masjid prayer times"
-                sandbox="allow-same-origin allow-scripts"
-                allowfullscreen>
-            </iframe>
-        </div>
-
-        <!-- Slide 7: Another Image -->
-        <div class="slide fade">
-            <img src="images/Donation_Info_16_9.jpeg" alt="Donation Info">
-        </div>
-
-        <!-- Slide 8: Web Page (CICC Masjid Prayer Times) -->
-        <div class="slide fade scaled">
-            <iframe
-                src="https://mosqueprayertimes.com/ciccmasjid"
-                title="CICC masjid prayer times"
-                sandbox="allow-same-origin allow-scripts"
-                allowfullscreen>
-            </iframe>
-        </div>
-
-        <!-- Slide 9: Web Page (Fasting Calendar) -->
-        <div class="slide fade sunnahfastcalendar">
-            <iframe
-                src="https://sunnahfasts.com"
-                scrolling="no">
-            </iframe>
-        </div>
-
-        <!-- Slide 10: Web Page (CICC Masjid Prayer Times) -->
-        <div class="slide fade scaled">
-            <iframe
-                src="https://mosqueprayertimes.com/ciccmasjid"
-                title="CICC masjid prayer times"
-                sandbox="allow-same-origin allow-scripts"
-                allowfullscreen>
-            </iframe>
-        </div>
-
-        <!-- Navigation Arrows -->
-        <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
-        <button class="next" onclick="changeSlide(1)">&#10095;</button>
-
-    </div>
-
-    <script>
-        let slideIndex = 0;
-        let slideInterval;
-        const displayDuration = 10000; // Time per slide in milliseconds (10 seconds)
-        const iframe = document.querySelector('.scaled');
-        const wrapper = document.querySelector('.slideshow-container');
-
-        // Initialize slideshow
-        showSlides(slideIndex);
-        startAutoSlide();
-
-        // Multi-purpose function to show specific slides
-        function showSlides(index) {
-            const slides = document.getElementsByClassName("slide");
-            
-            // Loop boundaries
-            if (index >= slides.length) { slideIndex = 0; }
-            if (index < 0) { slideIndex = slides.length - 1; }
-            
-            // Hide all slides
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mixed Media Slideshow</title>
+        <style>
+            /* Reset and layout setup */
+            *, *::before, *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
             }
-            
-            // Display the active slide
-            slides[slideIndex].style.display = "block";
-        }
 
-        // Manual controls (Next/Prev buttons)
-        function changeSlide(step) {
-            // Reset the auto-slide timer so manual clicks grant full viewing time
-            clearInterval(slideInterval); 
-            slideIndex += step;
+            html, body {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+
+            /* Slideshow Container */
+            .slideshow-container {
+                position: relative;
+                width: 100vw;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                background: #000;
+                overflow: hidden;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            }
+
+            /* Slide element defaults */
+            .slide {
+                display: none;
+                width: 100%;
+                height: 100%;
+            }
+
+            /* Make images scale smoothly inside the slide */
+            .slide img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain; /* Keeps image proportions without cropping */
+            }
+
+            /* Make web pages fill the slide container completely */
+            .slide iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+
+            /* Fade Animation Effect */
+            .fade {
+                animation: fadeEffect 1s;
+            }
+            @keyframes fadeEffect {
+                from { opacity: 0.4; }
+                to { opacity: 1; }
+            }
+
+            .scaled {
+                /* Default scale if JS is disabled */
+                --scale-factor: 1; 
+                
+                /* Calculates the proportional width/height inverse to the scale */
+                width: calc(100% / var(--scale-factor));
+                height: calc(100% / var(--scale-factor));
+                
+                transform: scale(var(--scale-factor));
+                transform-origin: top left;
+              }
+            
+            /* Special Config for Fasting Calendar */
+            .sunnahfastcalendar {
+                position: absolute;
+                top: -380px;    /* Adjust this to "scroll" vertically */
+                left: -860px;   /* Adjust this to "scroll" horizontally */
+                width: 3000px;  /* Set large enough to hold the site's layout */
+                height: 3000px; 
+                border: none;
+            }
+
+            /* Manual Navigation Buttons */
+            .prev, .next {
+                cursor: pointer;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                padding: 16px;
+                color: white;
+                font-weight: bold;
+                font-size: 24px;
+                border-radius: 0 4px 4px 0;
+                user-select: none;
+                background-color: rgba(0, 0, 0, 0.4);
+                border: none;
+                transition: 0.3s ease;
+                z-index: 10;
+            }
+            .next {
+                right: 0;
+                border-radius: 4px 0 0 4px;
+            }
+            .prev:hover, .next:hover {
+                background-color: rgba(0, 0, 0, 0.8);
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="slideshow-container">
+
+            <!-- Slide 1: Image -->
+            <div class="slide fade">
+                <img src="images/Weekly_Classes_16_9.jpg" alt="Weekly Classes">
+            </div>
+
+            <!-- Slide 2: Web Page (CICC Masjid Prayer Times) -->
+            <div class="slide fade scaled">
+                <iframe
+                    src="https://mosqueprayertimes.com/ciccmasjid"
+                    title="CICC masjid prayer times"
+                    loading="lazy"
+                    sandbox="allow-same-origin allow-scripts"
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <!-- Slide 3: Another Image -->
+            <div class="slide fade">
+                <img src="images/Jummah_Parking_16_9.png" alt="Jummah Parking">
+            </div>
+
+            <!-- Slide 4: Web Page (CICC Masjid Prayer Times) -->
+            <div class="slide fade scaled">
+                <iframe
+                    src="https://mosqueprayertimes.com/ciccmasjid"
+                    title="CICC masjid prayer times"
+                    loading="lazy"
+                    sandbox="allow-same-origin allow-scripts"
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <!-- Slide 5: Another Image -->
+            <div class="slide fade">
+                <img src="images/Social_Media_Info_16_9.png" alt="Social Media Info">
+            </div>
+
+            <!-- Slide 6: Web Page (CICC Masjid Prayer Times) -->
+            <div class="slide fade scaled">
+                <iframe
+                    src="https://mosqueprayertimes.com/ciccmasjid"
+                    title="CICC masjid prayer times"
+                    loading="lazy"
+                    sandbox="allow-same-origin allow-scripts"
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <!-- Slide 7: Another Image -->
+            <div class="slide fade">
+                <img src="images/Donation_Info_16_9.jpeg" alt="Donation Info">
+            </div>
+
+            <!-- Slide 8: Web Page (CICC Masjid Prayer Times) -->
+            <div class="slide fade scaled">
+                <iframe
+                    src="https://mosqueprayertimes.com/ciccmasjid"
+                    title="CICC masjid prayer times"
+                    loading="lazy"
+                    sandbox="allow-same-origin allow-scripts"
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <!-- Slide 9: Web Page (Fasting Calendar) -->
+            <div class="slide fade sunnahfastcalendar">
+                <iframe
+                    src="https://sunnahfasts.com"
+                    scrolling="no">
+                </iframe>
+            </div>
+
+            <!-- Slide 10: Web Page (CICC Masjid Prayer Times) -->
+            <div class="slide fade scaled">
+                <iframe
+                    src="https://mosqueprayertimes.com/ciccmasjid"
+                    title="CICC masjid prayer times"
+                    loading="lazy"
+                    sandbox="allow-same-origin allow-scripts"
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <!-- Navigation Arrows -->
+            <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+            <button class="next" onclick="changeSlide(1)">&#10095;</button>
+
+        </div>
+
+        <script>
+            let slideIndex = 0;
+            let slideInterval;
+            const displayDuration = 10000; // Time per slide in milliseconds (10 seconds)
+            const iframe = document.querySelector('.scaled');
+            const wrapper = document.querySelector('.slideshow-container');
+
+            // Initialize slideshow
             showSlides(slideIndex);
             startAutoSlide();
-        }
 
-        // Automatic interval function
-        function startAutoSlide() {
-            slideInterval = setInterval(() => {
-                slideIndex++;
+            // Multi-purpose function to show specific slides
+            function showSlides(index) {
+                const slides = document.getElementsByClassName("slide");
+                
+                // Loop boundaries
+                if (index >= slides.length) { slideIndex = 0; }
+                if (index < 0) { slideIndex = slides.length - 1; }
+                
+                // Hide all slides
+                for (let i = 0; i < slides.length; i++) {
+                    slides[i].style.display = "none";
+                }
+                
+                // Display the active slide
+                slides[slideIndex].style.display = "block";
+            }
+
+            // Manual controls (Next/Prev buttons)
+            function changeSlide(step) {
+                // Reset the auto-slide timer so manual clicks grant full viewing time
+                clearInterval(slideInterval); 
+                slideIndex += step;
                 showSlides(slideIndex);
-            }, displayDuration);
-        }
+                startAutoSlide();
+            }
 
-        function adjustScale() {
-            // Let's say the iframe content was originally designed for a 1200px width
-            const baseWidth = 1200; 
-            const currentWidth = wrapper.offsetWidth;
-            
-            // Calculate the scale ratio
-            const scale = currentWidth / baseWidth;
-            
-            // Pass the value directly to CSS
-            iframe.style.setProperty('--scale-factor', scale);
-          }
+            // Automatic interval function
+            function startAutoSlide() {
+                slideInterval = setInterval(() => {
+                    slideIndex++;
+                    showSlides(slideIndex);
+                }, displayDuration);
+            }
 
-        // Run on load and whenever the browser zooms or resizes
-        window.addEventListener('resize', adjustScale);
-        window.addEventListener('DOMContentLoaded', adjustScale);
-    </script>
+            function adjustScale() {
+                // Let's say the iframe content was originally designed for a 1200px width
+                const baseWidth = 1200; 
+                const currentWidth = wrapper.offsetWidth;
+                
+                // Calculate the scale ratio
+                const scale = currentWidth / baseWidth;
+                
+                // Pass the value directly to CSS
+                iframe.style.setProperty('--scale-factor', scale);
+            }
 
-</body>
+            // Run on load and whenever the browser zooms or resizes
+            window.addEventListener('resize', adjustScale);
+            window.addEventListener('DOMContentLoaded', adjustScale);
+        </script>
+
+    </body>
 </html>
-
